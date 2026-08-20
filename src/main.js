@@ -9,6 +9,12 @@ const CONFIDENCE_THRESHOLD = 0.80;
 
 let actionLocked = false;
 
+let currentZoom = 100;
+
+const MIN_ZOOM = 50;
+const MAX_ZOOM = 200;
+const ZOOM_STEP = 10;
+
 /**
  * Inicializa o modelo e a webcam.
  */
@@ -110,6 +116,13 @@ async function predict() {
         return;
     }
 
+    console.log('Predição passou pelo limiar!');
+
+    console.log(
+    'Classe recebida pela lógica:',
+    predictedClass
+);
+
     if (predictedClass === 'neutro') {
 
         actionLocked = false;
@@ -121,6 +134,20 @@ async function predict() {
         return;
     }
 
+console.log(
+    'Estado do bloqueio:',
+    actionLocked
+);
+
+if (actionLocked) {
+
+    console.log(
+        'AÇÃO BLOQUEADA'
+    );
+
+    return;
+}
+
     if (actionLocked) {
 
         return;
@@ -128,7 +155,11 @@ async function predict() {
 
     if (predictedClass === 'zoom mais') {
 
+      console.log('ENTROU NO ZOOM MAIS');
+
         actionLocked = true;
+
+        zoomIn();
 
         console.log(
             'AÇÃO: aumentar zoom'
@@ -139,10 +170,48 @@ async function predict() {
 
         actionLocked = true;
 
+        zoomOut();
+
         console.log(
             'AÇÃO: diminuir zoom'
         );
     }
+}
+
+/**
+ * Aumenta o nível de zoom.
+ */
+function zoomIn() {
+
+    currentZoom += ZOOM_STEP;
+
+    if (currentZoom > MAX_ZOOM) {
+
+        currentZoom = MAX_ZOOM;
+
+    }
+
+    console.log(
+        `Zoom atual: ${currentZoom}%`
+    );
+}
+
+/**
+ * Diminui o nível de zoom.
+ */
+function zoomOut() {
+
+    currentZoom -= ZOOM_STEP;
+
+    if (currentZoom < MIN_ZOOM) {
+
+        currentZoom = MIN_ZOOM;
+
+    }
+
+    console.log(
+        `Zoom atual: ${currentZoom}%`
+    );
 }
 
 init();
