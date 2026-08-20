@@ -6,7 +6,7 @@
 <title>Zoom Controle — Painel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
 
@@ -27,16 +27,11 @@
     <section class="panel panel--cam" aria-label="Webcam">
       <div class="panel__label">01 · CÂMERA</div>
       <div class="viewfinder" id="viewfinder">
-        <video id="webcam" autoplay playsinline muted></video>
         <div class="viewfinder__corner tl"></div>
         <div class="viewfinder__corner tr"></div>
         <div class="viewfinder__corner bl"></div>
         <div class="viewfinder__corner br"></div>
-        <div class="viewfinder__placeholder" id="camPlaceholder">
-          <p>câmera desligada</p>
-          <button id="camToggle" type="button">ativar webcam</button>
-        </div>
-      </div>
+      <div>
     </section>
 
     <!-- PAINEL DE PREDIÇÃO -->
@@ -49,18 +44,18 @@
       </div>
 
       <ul class="bars" id="bars">
-        <li class="bar" data-class="Neutro">
-          <span class="bar__name">Neutro</span>
+        <li class="bar" data-class="neutro">
+          <span class="bar__name">neutro</span>
           <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
           <span class="bar__value">0%</span>
         </li>
-        <li class="bar" data-class="Zoom +">
-          <span class="bar__name">Zoom +</span>
+        <li class="bar" data-class="zoom mais">
+          <span class="bar__name">zoom mais</span>
           <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
           <span class="bar__value">0%</span>
         </li>
-        <li class="bar" data-class="Zoom -">
-          <span class="bar__name">Zoom -</span>
+        <li class="bar" data-class="zoom menos">
+          <span class="bar__name">zoom menos</span>
           <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
           <span class="bar__value">0%</span>
         </li>
@@ -78,7 +73,7 @@
           <div class="slide-stage__content">
              <img 
                id ="slideImage"
-               src="Slides/Inteligência Artificial_img_teste.jpg"
+               src="/src/assets/ia_img_teste.jpg"
                alt="Slide">
           </div>
         </div>
@@ -96,14 +91,6 @@
 
   </main>
 
-  <footer class="footbar">
-    <span>mock ativo — trocar por <code>window.onPrediction</code> real do Eduardo</span>
-    <label class="footbar__toggle">
-      <input type="checkbox" id="mockToggle" checked>
-      simular predições
-    </label>
-  </footer>
-
-  <script src="script.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

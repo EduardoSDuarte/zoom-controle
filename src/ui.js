@@ -1,15 +1,3 @@
-/* ============================================================
-   ZOOM · CONTROLE — camada de interface (Nique)
-   ------------------------------------------------------------
-   O Eduardo vai chamar window.onPrediction({ classe, confianca })
-   toda vez que o modelo (TensorFlow.js / Teachable Machine) fizer
-   uma nova predição. Este arquivo só CONSOME esse resultado e
-   desenha a tela — não sabe nada sobre webcam de predição real,
-   TensorFlow, nem sobre como as classes foram treinadas.
-
-   Classes esperadas: "Neutro", "Zoom +", "Zoom -"
-   ============================================================ */
-
 const CONFIDENCE_THRESHOLD = 0.60; // abaixo disso, ação é ignorada
 const ZOOM_STEP = 6;               // % de zoom ganho/perdido por predição aceita
 const ZOOM_MIN = 50;
@@ -33,9 +21,8 @@ const el = {
 
 const DIAL_CIRCUMFERENCE = 2 * Math.PI * 52; // r=52 no SVG
 
-/* ============================================================
-   FUNÇÃO PRINCIPAL — é isso que o Eduardo vai chamar
-   ============================================================ */
+/* 
+   FUNÇÃO PRINCIPAL  */
 function onPrediction({ classe, confianca }) {
   setLive(true);
   updateBars(classe, confianca);
@@ -76,14 +63,14 @@ function applyZoomDecision(classe, confianca) {
     return;
   }
 
-  if (classe === 'Zoom +') {
+  if (classe === 'zoom mais') {
     zoomLevel = Math.min(ZOOM_MAX, zoomLevel + ZOOM_STEP);
-    setFeedback('Zoom + aplicado', 'action');
-  } else if (classe === 'Zoom -') {
+    setFeedback('zoom mais aplicado', 'action');
+  } else if (classe === 'zoom menos') {
     zoomLevel = Math.max(ZOOM_MIN, zoomLevel - ZOOM_STEP);
-    setFeedback('Zoom - aplicado', 'action');
+    setFeedback('zoom menos aplicado', 'action');
   } else {
-    setFeedback('Neutro — zoom mantido', null);
+    setFeedback('neutro — zoom mantido', null);
   }
 
   renderZoom();
@@ -112,57 +99,4 @@ function setLive(isLive) {
   el.statusText.textContent = isLive ? 'MODELO CONECTADO' : 'AGUARDANDO MODELO';
 }
 
-/* ============================================================
-   WEBCAM — apenas exibição do vídeo (a predição é do Eduardo)
-   ============================================================ */
-const viewfinder = document.getElementById('viewfinder');
-const camToggle = document.getElementById('camToggle');
-const webcamVideo = document.getElementById('webcam');
-
-camToggle.addEventListener('click', async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    webcamVideo.srcObject = stream;
-    viewfinder.classList.add('is-active');
-  } catch (err) {
-    setFeedback('não foi possível acessar a webcam', 'ignored');
-  }
-});
-
-/* ============================================================
-   MOCK — simula predições chegando, só para testar a tela
-   sem depender do modelo pronto. Depois é só apagar este
-   bloco (ou desmarcar o checkbox) quando o script do Eduardo
-   estiver chamando window.onPrediction de verdade.
-   ============================================================ */
-const mockToggle = document.getElementById('mockToggle');
-let mockInterval = null;
-
-function startMock() {
-  const sequencia = ['Neutro', 'Zoom +', 'Zoom +', 'Zoom +', 'Neutro', 'Zoom -', 'Zoom -', 'Neutro'];
-  let i = 0;
-
-  mockInterval = setInterval(() => {
-    const classe = sequencia[i % sequencia.length];
-    const confianca = classe === 'Neutro'
-      ? 0.55 + Math.random() * 0.2
-      : 0.75 + Math.random() * 0.24;
-
-    onPrediction({ classe, confianca: Math.min(confianca, 0.99) });
-    i++;
-  }, 1400);
-}
-
-function stopMock() {
-  clearInterval(mockInterval);
-  setLive(false);
-}
-
-mockToggle.addEventListener('change', () => {
-  if (mockToggle.checked) startMock();
-  else stopMock();
-});
-
-// inicializa
 renderZoom();
-if (mockToggle.checked) startMock();
