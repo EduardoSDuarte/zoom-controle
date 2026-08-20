@@ -7,6 +7,8 @@ let webcam;
 
 const CONFIDENCE_THRESHOLD = 0.80;
 
+let actionLocked = false;
+
 /**
  * Inicializa o modelo e a webcam.
  */
@@ -108,9 +110,39 @@ async function predict() {
         return;
     }
 
-    console.log(
-        'Predição aceita!'
-    );
+    if (predictedClass === 'neutro') {
+
+        actionLocked = false;
+
+        console.log(
+            'Sistema liberado para novo comando.'
+        );
+
+        return;
+    }
+
+    if (actionLocked) {
+
+        return;
+    }
+
+    if (predictedClass === 'zoom mais') {
+
+        actionLocked = true;
+
+        console.log(
+            'AÇÃO: aumentar zoom'
+        );
+    }
+
+    if (predictedClass === 'zoom menos') {
+
+        actionLocked = true;
+
+        console.log(
+            'AÇÃO: diminuir zoom'
+        );
+    }
 }
 
 init();
