@@ -2,13 +2,13 @@
 
 Controle de zoom em slides por reconhecimento de gestos, usando visão computacional treinada com **Teachable Machine** e rodando ao vivo no navegador via webcam.
 
-**Dupla:** LiLa · Eduardo Duarte
+**Dupla:** Monique · Eduardo Duarte
 
 ---
 
 ## 📽️ Demonstração
 
-![Demonstração do projeto funcionando](./docs/gif_ia_atv.gif)
+![Demonstração do projeto funcionando](./docs/gif_atv.gif)
 
 > A câmera captura o gesto da mão, o modelo classifica em tempo real, e o slide aplica o zoom automaticamente conforme a predição.
 
