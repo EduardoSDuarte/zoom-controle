@@ -1,4 +1,5 @@
 import * as tmImage from '@teachablemachine/image';
+import './ui.js';
 
 const MODEL_URL = '/';
 
@@ -43,7 +44,7 @@ async function init() {
     await webcam.play();
 
     document
-        .getElementById('webcam-container')
+        .getElementById('viewfinder')
         .appendChild(webcam.canvas);
 
     window.requestAnimationFrame(loop);
@@ -88,130 +89,11 @@ async function predict() {
         }
     }
 
-    const predictedClass =
-        highestPrediction.className;
+    console.log('Classe:', highestPrediction.className, 'Confiança:', highestPrediction.probability);
 
-    const confidence =
-        highestPrediction.probability;
-
-    console.log(
-        'Classe:',
-        predictedClass
-    );
-
-    console.log(
-        'Confiança:',
-        confidence
-    );
-
-    if (
-        confidence <
-        CONFIDENCE_THRESHOLD
-    ) {
-
-        console.log(
-            'Predição ignorada: confiança abaixo de 80%'
-        );
-
-        return;
-    }
-
-    console.log('Predição passou pelo limiar!');
-
-    console.log(
-    'Classe recebida pela lógica:',
-    predictedClass
-);
-
-    if (predictedClass === 'neutro') {
-
-        actionLocked = false;
-
-        console.log(
-            'Sistema liberado para novo comando.'
-        );
-
-        return;
-    }
-
-console.log(
-    'Estado do bloqueio:',
-    actionLocked
-);
-
-if (actionLocked) {
-
-    console.log(
-        'AÇÃO BLOQUEADA'
-    );
-
-    return;
+    window.onPrediction({
+        classe: highestPrediction.className,
+        confianca: highestPrediction.probability
+    });
 }
-
-    if (actionLocked) {
-
-        return;
-    }
-
-    if (predictedClass === 'zoom mais') {
-
-      console.log('ENTROU NO ZOOM MAIS');
-
-        actionLocked = true;
-
-        zoomIn();
-
-        console.log(
-            'AÇÃO: aumentar zoom'
-        );
-    }
-
-    if (predictedClass === 'zoom menos') {
-
-        actionLocked = true;
-
-        zoomOut();
-
-        console.log(
-            'AÇÃO: diminuir zoom'
-        );
-    }
-}
-
-/**
- * Aumenta o nível de zoom.
- */
-function zoomIn() {
-
-    currentZoom += ZOOM_STEP;
-
-    if (currentZoom > MAX_ZOOM) {
-
-        currentZoom = MAX_ZOOM;
-
-    }
-
-    console.log(
-        `Zoom atual: ${currentZoom}%`
-    );
-}
-
-/**
- * Diminui o nível de zoom.
- */
-function zoomOut() {
-
-    currentZoom -= ZOOM_STEP;
-
-    if (currentZoom < MIN_ZOOM) {
-
-        currentZoom = MIN_ZOOM;
-
-    }
-
-    console.log(
-        `Zoom atual: ${currentZoom}%`
-    );
-}
-
 init();

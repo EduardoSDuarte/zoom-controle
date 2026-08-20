@@ -1,28 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Controle de Zoom por IA</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoom Controle — Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/style.css">
 </head>
-
 <body>
 
-    <div id="webcam-container"></div>
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__ring"></span>
+      <h1>ZOOM <span>·</span> CONTROLE</h1>
+    </div>
+    <div class="topbar__status" id="statusPill">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">AGUARDANDO MODELO</span>
+    </div>
+  </header>
 
-    <script
-        type="module"
-        src="/src/main.js">
-    </script>
+  <main class="grid">
 
+    <!-- PAINEL DA WEBCAM -->
+    <section class="panel panel--cam" aria-label="Webcam">
+      <div class="panel__label">01 · CÂMERA</div>
+      <div class="viewfinder" id="viewfinder">
+        <div class="viewfinder__corner tl"></div>
+        <div class="viewfinder__corner tr"></div>
+        <div class="viewfinder__corner bl"></div>
+        <div class="viewfinder__corner br"></div>
+      <div>
+    </section>
+
+    <!-- PAINEL DE PREDIÇÃO -->
+    <section class="panel panel--pred" aria-label="Predição do modelo">
+      <div class="panel__label">02 · PREDIÇÃO</div>
+
+      <div class="current-class">
+        <span class="current-class__tag" id="currentTag">NEUTRO</span>
+        <span class="current-class__conf" id="currentConf">0%</span>
+      </div>
+
+      <ul class="bars" id="bars">
+        <li class="bar" data-class="neutro">
+          <span class="bar__name">neutro</span>
+          <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
+          <span class="bar__value">0%</span>
+        </li>
+        <li class="bar" data-class="zoom mais">
+          <span class="bar__name">zoom mais</span>
+          <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
+          <span class="bar__value">0%</span>
+        </li>
+        <li class="bar" data-class="zoom menos">
+          <span class="bar__name">zoom menos</span>
+          <div class="bar__track"><div class="bar__fill" style="width:0%"></div></div>
+          <span class="bar__value">0%</span>
+        </li>
+      </ul>
+
+      <p class="feedback" id="feedback">esperando primeira predição…</p>
+    </section>
+
+    <!-- PAINEL DO SLIDE / ZOOM -->
+    <section class="panel panel--slide" aria-label="Slide com zoom">
+      <div class="panel__label">03 · SLIDE</div>
+
+      <div class="slide-stage">
+        <div class="slide-stage__frame">
+          <div class="slide-stage__content">
+             <img 
+               id ="slideImage"
+               src="/src/assets/ia_img_teste.jpg"
+               alt="Slide">
+          </div>
+        </div>
+      </div>
+
+      <div class="lens-dial" aria-hidden="true">
+        <svg viewBox="0 0 120 120" id="dialSvg">
+          <circle class="lens-dial__bg" cx="60" cy="60" r="52"></circle>
+          <circle class="lens-dial__fill" id="dialFill" cx="60" cy="60" r="52"></circle>
+          <text x="60" y="66" text-anchor="middle" id="dialLabel">100%</text>
+        </svg>
+        <span class="lens-dial__caption">ZOOM ATUAL</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
-
 </html>
