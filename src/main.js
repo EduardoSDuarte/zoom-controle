@@ -5,6 +5,8 @@ const MODEL_URL = '/';
 let model;
 let webcam;
 
+const CONFIDENCE_THRESHOLD = 0.80;
+
 /**
  * Inicializa o modelo e a webcam.
  */
@@ -78,14 +80,36 @@ async function predict() {
         }
     }
 
+    const predictedClass =
+        highestPrediction.className;
+
+    const confidence =
+        highestPrediction.probability;
+
     console.log(
         'Classe:',
-        highestPrediction.className
+        predictedClass
     );
 
     console.log(
         'Confiança:',
-        highestPrediction.probability
+        confidence
+    );
+
+    if (
+        confidence <
+        CONFIDENCE_THRESHOLD
+    ) {
+
+        console.log(
+            'Predição ignorada: confiança abaixo de 80%'
+        );
+
+        return;
+    }
+
+    console.log(
+        'Predição aceita!'
     );
 }
 
