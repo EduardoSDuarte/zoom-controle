@@ -5,19 +5,31 @@ const MODEL_URL = '/';
 let model;
 let webcam;
 
+/**
+ * Inicializa o modelo e a webcam.
+ */
 async function init() {
+
     console.log('Carregando modelo...');
 
     const modelURL = MODEL_URL + 'model.json';
     const metadataURL = MODEL_URL + 'metadata.json';
 
-    model = await tmImage.load(modelURL, metadataURL);
+    model = await tmImage.load(
+        modelURL,
+        metadataURL
+    );
 
     console.log('Modelo carregado!');
 
-    webcam = new tmImage.Webcam(320, 320, true);
+    webcam = new tmImage.Webcam(
+        320,
+        320,
+        true
+    );
 
     await webcam.setup();
+
     await webcam.play();
 
     document
@@ -27,7 +39,12 @@ async function init() {
     window.requestAnimationFrame(loop);
 }
 
+/**
+ * Atualiza a webcam e realiza
+ * novas previsões continuamente.
+ */
 async function loop() {
+
     webcam.update();
 
     await predict();
@@ -35,29 +52,38 @@ async function loop() {
     window.requestAnimationFrame(loop);
 }
 
+/**
+ * Realiza a classificação da imagem
+ * capturada pela webcam.
+ */
 async function predict() {
-    const prediction = await model.predict(webcam.canvas);
 
-    let highestPrediction = prediction[0];
+    const predictions =
+        await model.predict(
+            webcam.canvas
+        );
 
-    for (let i = 0; i < prediction.length; i++) {
+    let highestPrediction =
+        predictions[0];
+
+    for (const prediction of predictions) {
 
         if (
-            prediction[i].probability >
+            prediction.probability >
             highestPrediction.probability
         ) {
-            highestPrediction = prediction[i];
-        }
 
-        console.log(
-            prediction[i].className,
-            prediction[i].probability
-        );
+            highestPrediction =
+                prediction;
+        }
     }
 
     console.log(
-        'Predição:',
-        highestPrediction.className,
+        'Classe:',
+        highestPrediction.className
+    );
+
+    console.log(
         'Confiança:',
         highestPrediction.probability
     );
